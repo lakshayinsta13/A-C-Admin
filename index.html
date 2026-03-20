@@ -15,7 +15,9 @@
         <h1>📋 Order Management Dashboard</h1>
         <button id="logoutBtn" style="padding:4px 10px;">Logout</button>
     </div>
-    <p><a href="products.html">🏷️ Manage Cosmetic Products</a></p>
+    <div style="margin-bottom: 20px;">
+        <button id="manageProductsBtn">🏷️ Manage Cosmetic Products</button>
+    </div>
 
     <div class="export">
         <button id="exportBtn">⬇ Export to Excel</button>
@@ -81,5 +83,16 @@
         <script src="auth-guard.js"></script>
         <script src="admin.js"></script>
 </body>
+        <script>
+            // Handle Manage Products button click
+            document.addEventListener('DOMContentLoaded', () => {
+                const manageProductsBtn = document.getElementById('manageProductsBtn');
+                if (manageProductsBtn) {
+                    manageProductsBtn.addEventListener('click', () => {
+                        location.href = 'products.html';
+                    });
+                }
+            });
+        </script>
 
 </html>
