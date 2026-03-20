@@ -29,7 +29,7 @@ function checkSession() {
 document.addEventListener('DOMContentLoaded', () => {
   try {
     if (!checkSession()) {
-      const next = location.pathname.split('/').pop() || 'admin.html';
+      const next = location.pathname.split('/').pop() || 'index.html';
       location.href = `login.html?next=${encodeURIComponent(next)}`;
     }
   } catch (err) {

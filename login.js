@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Redirect to original destination if provided (relative path to work in any folder)
         const params = new URLSearchParams(location.search);
         // everything is relative – avoid leading slash so it works from file:// or any folder
-        const next = params.get('next') || 'admin.html';
+        const next = params.get('next') || 'index.html';
         location.href = next;
       } else {
         msg.textContent = 'Incorrect password';
