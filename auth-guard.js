@@ -29,8 +29,12 @@ function checkSession() {
 document.addEventListener('DOMContentLoaded', () => {
   try {
     if (!checkSession()) {
-      const next = location.pathname.split('/').pop() || 'index.html';
-      location.href = `login.html?next=${encodeURIComponent(next)}`;
+      // Get current page name, handle GitHub Pages paths correctly
+      let currentPage = location.pathname.split('/').pop();
+      if (!currentPage || currentPage === '') currentPage = 'index.html';
+      // Make sure it's not trying to redirect to login.html itself
+      if (currentPage === 'login.html') currentPage = 'index.html';
+      location.href = `login.html?next=${encodeURIComponent(currentPage)}`;
     }
   } catch (err) {
     console.error('Auth guard error', err);
