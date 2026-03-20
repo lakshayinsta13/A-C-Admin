@@ -135,7 +135,9 @@ async function deleteProduct(id) {
             Authorization: `Bearer ${SUPABASE_KEY}`,
         },
     });
-    loadAllProducts();
+    // Remove from local array instead of reloading all
+    allProducts = allProducts.filter(p => p.id !== id);
+    renderProductsTable();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -201,11 +203,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     // UPDATE existing product
                     console.log('Updating product ID:', existingId);
                     await updateProduct(existingId, { name, quantity_type: qtyType || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' });
+                    // Update local array instead of reloading
+                    const idx = allProducts.findIndex(p => String(p.id) === String(existingId));
+                    if (idx >= 0) {
+                        allProducts[idx] = { ...allProducts[idx], name, quantity_type: qtyType || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' };
+                    }
                     alert('Product updated successfully!');
                 } else {
                     // CREATE new product
                     console.log('Creating new product');
-                    await addProduct({ name, quantity_type: qtyType || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' });
+                    const result = await addProduct({ name, quantity_type: qtyType || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' });
+                    // Reload only for new products since we don't get the ID back
+                    loadAllProducts();
                     alert('Product added successfully!');
                 }
             } catch (err) {
@@ -227,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (productSubmitBtn) productSubmitBtn.textContent = 'Add Product';
             if (cancelEditBtn) cancelEditBtn.style.display = 'none';
 
-            loadAllProducts();
+            renderProductsTable();
         });
     }
 
@@ -316,6 +325,11 @@ document.addEventListener('change', async (e) => {
             }
         }
         await updateProduct(id, { publish_status: checked ? 'Published' : 'Not Published' });
-        loadAllProducts();
+        // Update local array instead of reloading all products
+        const idx = allProducts.findIndex(p => String(p.id) === String(id));
+        if (idx >= 0) {
+            allProducts[idx].publish_status = checked ? 'Published' : 'Not Published';
+        }
+        renderProductsTable();
     }
 });
