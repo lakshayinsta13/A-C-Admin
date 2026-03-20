@@ -145,7 +145,10 @@ document.addEventListener("DOMContentLoaded", () => {
     initLogoutButton();
 
     const productForm = document.getElementById("productForm");
-    const prodFileInput = document.getElementById('prodFile');
+    const captureImageBtn = document.getElementById('captureImageBtn');
+    const uploadImageBtn = document.getElementById('uploadImageBtn');
+    const prodFileCaptureInput = document.getElementById('prodFileCapture');
+    const prodFileUploadInput = document.getElementById('prodFileUpload');
     const prodPreview = document.getElementById('prodPreview');
     const prodImgHidden = document.getElementById('prodImg');
     const prodIdHidden = document.getElementById('prodId');
@@ -154,29 +157,47 @@ document.addEventListener("DOMContentLoaded", () => {
     const productSubmitBtn = document.getElementById('productSubmitBtn');
     const cancelEditBtn = document.getElementById('cancelEdit');
 
-    if (prodFileInput) {
-        prodFileInput.addEventListener('change', (e) => {
-            const file = e.target.files && e.target.files[0];
-            if (!file) {
-                if (prodPreview) prodPreview.style.display = 'none';
-                if (prodImgHidden) prodImgHidden.value = '';
-                return;
+    function handleImageSelect(inputEl) {
+        const file = inputEl && inputEl.files && inputEl.files[0];
+        if (!file) {
+            if (prodPreview) prodPreview.style.display = 'none';
+            if (prodImgHidden) prodImgHidden.value = '';
+            return;
+        }
+        if (!file.type.startsWith('image/')) {
+            alert('Please choose an image file.');
+            inputEl.value = '';
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            if (prodPreview) {
+                prodPreview.src = reader.result;
+                prodPreview.style.display = 'block';
             }
-            if (!file.type.startsWith('image/')) {
-                alert('Please choose an image file.');
-                prodFileInput.value = '';
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = () => {
-                if (prodPreview) {
-                    prodPreview.src = reader.result;
-                    prodPreview.style.display = 'block';
-                }
-                if (prodImgHidden) prodImgHidden.value = reader.result; // DataURL
-            };
-            reader.readAsDataURL(file);
+            if (prodImgHidden) prodImgHidden.value = reader.result; // DataURL
+        };
+        reader.readAsDataURL(file);
+    }
+
+    if (captureImageBtn && prodFileCaptureInput) {
+        captureImageBtn.addEventListener('click', () => {
+            prodFileCaptureInput.click();
         });
+    }
+
+    if (uploadImageBtn && prodFileUploadInput) {
+        uploadImageBtn.addEventListener('click', () => {
+            prodFileUploadInput.click();
+        });
+    }
+
+    if (prodFileCaptureInput) {
+        prodFileCaptureInput.addEventListener('change', () => handleImageSelect(prodFileCaptureInput));
+    }
+
+    if (prodFileUploadInput) {
+        prodFileUploadInput.addEventListener('change', () => handleImageSelect(prodFileUploadInput));
     }
 
     if (productForm) {
@@ -230,7 +251,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 prodPreview.style.display = 'none';
                 prodPreview.src = '';
             }
-            if (prodFileInput) prodFileInput.value = '';
+            if (prodFileCaptureInput) prodFileCaptureInput.value = '';
+            if (prodFileUploadInput) prodFileUploadInput.value = '';
             if (prodImgHidden) prodImgHidden.value = '';
             if (prodIdHidden) prodIdHidden.value = '';
             if (productSubmitBtn) productSubmitBtn.textContent = 'Add Product';
@@ -249,7 +271,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 prodPreview.style.display = 'none';
                 prodPreview.src = '';
             }
-            if (prodFileInput) prodFileInput.value = '';
+            if (prodFileCaptureInput) prodFileCaptureInput.value = '';
+            if (prodFileUploadInput) prodFileUploadInput.value = '';
             if (prodImgHidden) prodImgHidden.value = '';
             if (prodIdHidden) prodIdHidden.value = '';
             if (productSubmitBtn) productSubmitBtn.textContent = 'Add Product';

@@ -27,7 +27,12 @@
                 <label style="display:flex; align-items:center; gap:6px;">
                     <input type="checkbox" id="prodPublished" checked /> Published
                 </label>
-                <input type="file" id="prodFile" accept="image/*" capture="environment" />
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                    <button type="button" id="captureImageBtn">Capture Photo</button>
+                    <button type="button" id="uploadImageBtn">Upload from Gallery</button>
+                    <input type="file" id="prodFileCapture" accept="image/*" capture="environment" style="display:none;" />
+                    <input type="file" id="prodFileUpload" accept="image/*" style="display:none;" />
+                </div>
                 <input type="hidden" id="prodImg" />
                 <img id="prodPreview" alt="Preview" style="max-width:120px; max-height:120px; object-fit:cover; display:none;" />
                 <button type="submit" id="productSubmitBtn">Add Product</button>
