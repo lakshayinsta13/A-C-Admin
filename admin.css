@@ -655,6 +655,7 @@ button.reject:active {
 }
 
 #productForm input,
+#productForm select,
 #productForm button {
     font-family: inherit;
     padding: 12px 12px;
@@ -668,6 +669,7 @@ button.reject:active {
 @media (min-width: 640px) {
 
     #productForm input,
+    #productForm select,
     #productForm button {
         padding: 10px 13px;
         font-size: 13px;
@@ -679,6 +681,7 @@ button.reject:active {
 @media (min-width: 1024px) {
 
     #productForm input,
+    #productForm select,
     #productForm button {
         padding: 10px 14px;
         font-size: 14px;
@@ -689,6 +692,12 @@ button.reject:active {
 #productForm input {
     flex: 1 1 auto;
     min-width: 80px;
+}
+
+#productForm select {
+    flex: 1 1 auto;
+    min-width: 180px;
+    background: #ffffff;
 }
 
 #productForm button {
@@ -799,6 +808,38 @@ button.reject:active {
 #publishedTable,
 #unpublishedTable {
     width: 100%;
+}
+
+.product-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.product-toolbar input,
+.product-toolbar select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 10px 12px;
+    min-height: 40px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .product-toolbar {
+        grid-template-columns: 1.5fr 1fr;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .product-toolbar input,
+    .product-toolbar select {
+        font-size: 14px;
+    }
 }
 
 /* Mobile card view */

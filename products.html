@@ -21,6 +21,33 @@
                 <input type="hidden" id="prodId" />
                 <input type="text" id="prodName" placeholder="Product Name" required />
                 <input type="text" id="prodQtyType" placeholder="Quantity Type (e.g. Kg, pcs)" />
+                <select id="prodCategory" aria-label="Product Category">
+                    <option value="">Select Category (optional)</option>
+                    <optgroup label="Face & Skin">
+                        <option value="Skincare">Skincare</option>
+                        <option value="Sun Care">Sun Care</option>
+                        <option value="Eye Care">Eye Care</option>
+                        <option value="Lip Care">Lip Care</option>
+                    </optgroup>
+                    <optgroup label="Beauty & Styling">
+                        <option value="Makeup">Makeup</option>
+                        <option value="Hair Care">Hair Care</option>
+                        <option value="Nail Care">Nail Care</option>
+                        <option value="Beauty Tools & Accessories">Beauty Tools &amp; Accessories</option>
+                    </optgroup>
+                    <optgroup label="Body & Fragrance">
+                        <option value="Body Care">Body Care</option>
+                        <option value="Bath & Shower">Bath &amp; Shower</option>
+                        <option value="Hand & Foot Care">Hand &amp; Foot Care</option>
+                        <option value="Fragrance">Fragrance</option>
+                    </optgroup>
+                    <optgroup label="Special Collections">
+                        <option value="Men's Grooming">Men&#39;s Grooming</option>
+                        <option value="Personal Hygiene">Personal Hygiene</option>
+                        <option value="Natural & Organic">Natural &amp; Organic</option>
+                        <option value="Gift Sets & Combos">Gift Sets &amp; Combos</option>
+                    </optgroup>
+                </select>
                 <input type="number" id="prodPrice" placeholder="Price" required />
                 <input type="number" id="prodDiscount" placeholder="Discount amount (optional)" />
                 <input type="text" id="prodDetails" placeholder="Details / offer text" />
@@ -42,12 +69,37 @@
     </section>
 
     <section>
+        <div class="product-toolbar">
+            <input type="text" id="productSearch" placeholder="Search products by name" />
+            <select id="categoryFilter" aria-label="Filter by category">
+                <option value="">All Categories</option>
+                <option value="Skincare">Skincare</option>
+                <option value="Sun Care">Sun Care</option>
+                <option value="Eye Care">Eye Care</option>
+                <option value="Lip Care">Lip Care</option>
+                <option value="Makeup">Makeup</option>
+                <option value="Hair Care">Hair Care</option>
+                <option value="Nail Care">Nail Care</option>
+                <option value="Beauty Tools & Accessories">Beauty Tools &amp; Accessories</option>
+                <option value="Body Care">Body Care</option>
+                <option value="Bath & Shower">Bath &amp; Shower</option>
+                <option value="Hand & Foot Care">Hand &amp; Foot Care</option>
+                <option value="Fragrance">Fragrance</option>
+                <option value="Men's Grooming">Men&#39;s Grooming</option>
+                <option value="Personal Hygiene">Personal Hygiene</option>
+                <option value="Natural & Organic">Natural &amp; Organic</option>
+                <option value="Gift Sets & Combos">Gift Sets &amp; Combos</option>
+            </select>
+        </div>
+        <p id="productCount" style="margin-top:0; margin-bottom:10px;">Showing 0 products</p>
+
         <h2>Published Products</h2>
         <table id="publishedTable">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Qty Type</th>
+                    <th>Category</th>
                     <th>Price ₹</th>
                     <th>Discount ₹</th>
                     <th>Details</th>
@@ -65,6 +117,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Qty Type</th>
+                    <th>Category</th>
                     <th>Price ₹</th>
                     <th>Discount ₹</th>
                     <th>Details</th>

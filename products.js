@@ -52,9 +52,24 @@ function renderProductsTable() {
     const pubBody = document.querySelector('#publishedTable tbody');
     const unpubBody = document.querySelector('#unpublishedTable tbody');
     const singleBody = document.querySelector('#productsTable tbody');
+    const productSearch = document.getElementById('productSearch');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const productCount = document.getElementById('productCount');
 
-    if (!allProducts.length) {
-        const empty = '<tr><td colspan="8" align="center">No products</td></tr>';
+    const searchValue = productSearch ? productSearch.value.trim().toLowerCase() : '';
+    const categoryValue = categoryFilter ? categoryFilter.value.trim() : '';
+    const filteredProducts = allProducts.filter((p) => {
+        const matchesName = !searchValue || String(p.name || '').toLowerCase().includes(searchValue);
+        const matchesCategory = !categoryValue || String(p.category || '') === categoryValue;
+        return matchesName && matchesCategory;
+    });
+
+    if (productCount) {
+        productCount.textContent = `Showing ${filteredProducts.length} product${filteredProducts.length === 1 ? '' : 's'}`;
+    }
+
+    if (!filteredProducts.length) {
+        const empty = '<tr><td colspan="9" align="center">No products</td></tr>';
         if (pubBody) pubBody.innerHTML = empty;
         if (unpubBody) unpubBody.innerHTML = empty;
         if (singleBody) singleBody.innerHTML = empty;
@@ -66,14 +81,16 @@ function renderProductsTable() {
     let unpubHtml = '';
     let singleHtml = '';
 
-    allProducts.forEach(p => {
+    filteredProducts.forEach(p => {
         const imgCell = p.image_url ? (p.image_url.startsWith('data:') || p.image_url.match(/^https?:\/\//) ? `<img src="${p.image_url}" style="max-width:80px; max-height:80px; object-fit:cover;"/>` : `<a href="${p.image_url}" target="_blank">view</a>`) : '';
         const publishedChecked = (p.publish_status === 'Published' || p.published) ? 'checked' : '';
         const qtyType = p.quantity_type || '';
+        const category = p.category || '';
         const rowHtml = `
             <tr>
                 <td data-label="Name">${escapeHtml(p.name)}</td>
                 <td data-label="Qty Type">${escapeHtml(qtyType)}</td>
+                <td data-label="Category">${escapeHtml(category)}</td>
                 <td data-label="Price">${escapeHtml(p.price)}</td>
                 <td data-label="Discount">${escapeHtml(p.discount || 0)}</td>
                 <td data-label="Details">${escapeHtml(p.details || "")}</td>
@@ -154,8 +171,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const prodIdHidden = document.getElementById('prodId');
     const prodPublished = document.getElementById('prodPublished');
     const prodQtyType = document.getElementById('prodQtyType');
+    const prodCategory = document.getElementById('prodCategory');
     const productSubmitBtn = document.getElementById('productSubmitBtn');
     const cancelEditBtn = document.getElementById('cancelEdit');
+    const productSearch = document.getElementById('productSearch');
+    const categoryFilter = document.getElementById('categoryFilter');
 
     function handleImageSelect(inputEl) {
         const file = inputEl && inputEl.files && inputEl.files[0];
@@ -200,11 +220,24 @@ document.addEventListener("DOMContentLoaded", () => {
         prodFileUploadInput.addEventListener('change', () => handleImageSelect(prodFileUploadInput));
     }
 
+    if (productSearch) {
+        productSearch.addEventListener('input', () => {
+            renderProductsTable();
+        });
+    }
+
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', () => {
+            renderProductsTable();
+        });
+    }
+
     if (productForm) {
         productForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const name = document.getElementById("prodName").value.trim();
             const qtyType = document.getElementById("prodQtyType").value.trim();
+            const category = document.getElementById("prodCategory").value.trim();
             const price = parseFloat(document.getElementById("prodPrice").value);
             const discount = parseFloat(document.getElementById("prodDiscount").value) || 0;
             const details = document.getElementById("prodDetails").value.trim();
@@ -223,17 +256,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (isEditMode && existingId) {
                     // UPDATE existing product
                     console.log('Updating product ID:', existingId);
-                    await updateProduct(existingId, { name, quantity_type: qtyType || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' });
+                    await updateProduct(existingId, { name, quantity_type: qtyType || null, category: category || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' });
                     // Update local array instead of reloading
                     const idx = allProducts.findIndex(p => String(p.id) === String(existingId));
                     if (idx >= 0) {
-                        allProducts[idx] = { ...allProducts[idx], name, quantity_type: qtyType || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' };
+                        allProducts[idx] = { ...allProducts[idx], name, quantity_type: qtyType || null, category: category || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' };
                     }
                     alert('Product updated successfully!');
                 } else {
                     // CREATE new product
                     console.log('Creating new product');
-                    const result = await addProduct({ name, quantity_type: qtyType || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' });
+                    const result = await addProduct({ name, quantity_type: qtyType || null, category: category || null, price, discount, details: details || null, image_url: image_url || null, publish_status: published ? 'Published' : 'Not Published' });
                     // Reload only for new products since we don't get the ID back
                     loadAllProducts();
                     alert('Product added successfully!');
@@ -310,6 +343,7 @@ document.addEventListener("click", (e) => {
         const prodPreview = document.getElementById('prodPreview');
         const prodPublished = document.getElementById('prodPublished');
         const prodQtyType = document.getElementById('prodQtyType');
+        const prodCategory = document.getElementById('prodCategory');
         const productSubmitBtn = document.getElementById('productSubmitBtn');
         const cancelEditBtn = document.getElementById('cancelEdit');
 
@@ -325,6 +359,7 @@ document.addEventListener("click", (e) => {
         }
         if (prodPublished) prodPublished.checked = (prod.publish_status === 'Published');
         if (prodQtyType) prodQtyType.value = prod.quantity_type || '';
+        if (prodCategory) prodCategory.value = prod.category || '';
         if (prodIdHidden) {
             prodIdHidden.value = String(prod.id);
             console.log('Set product ID for edit:', prodIdHidden.value);
